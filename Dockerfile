@@ -7,7 +7,7 @@ USER jenkins
 # plugins
 COPY plugins/plugins.txt /usr/share/jenkins/plugins.txt
 
-RUN /usr/local/bin/install-plugins.sh $(cat /usr/share/jenkins/plugins.txt | tr '\n' ' ') || echo "\033[1;91m*** \033[1;93m Bad Jenkins! \033[1;92mManually Install Plugins! \033[1;91m***\033[0m"
+RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/plugins.txt || echo "\033[1;91m*** \033[1;93m Bad Jenkins! \033[1;92mManually Install Plugins! \033[1;91m***\033[0m"
 
 # jobs
 COPY jobs/aadi-ci-config.xml /usr/share/jenkins/ref/jobs/aadi-ci/config.xml
