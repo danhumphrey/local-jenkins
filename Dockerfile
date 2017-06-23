@@ -1,13 +1,18 @@
 FROM jenkins
 
 USER root
+RUN apt-get update && apt-get install -y dos2unix
 RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
-USER jenkins
 
 # plugins
 COPY plugins/plugins.txt /usr/share/jenkins/plugins.txt
 
+#fix windows line endings
+RUN dos2unix /usr/share/jenkins/plugins.txt && apt-get --purge remove -y dos2unix && rm -rf /var/lib/apt/lists/*
+
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/plugins.txt || echo "\033[1;91m*** \033[1;93m Bad Jenkins! \033[1;92mManually Install Plugins! \033[1;91m***\033[0m"
+
+USER jenkins
 
 # jobs
 COPY jobs/aadi-ci-config.xml /usr/share/jenkins/ref/jobs/aadi-ci/config.xml
